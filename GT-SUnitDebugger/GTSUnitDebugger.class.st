@@ -48,7 +48,12 @@ GTSUnitDebugger class >> lookupStackSize [
 
 { #category : #accessing }
 GTSUnitDebugger class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
-	^ super openOn: (self spanNewSessionFrom: aDebugSession) withFullView: aBool andNotification: aString
+	| newDebugSession debugger |
+	newDebugSession := (self spanNewSessionFrom: aDebugSession).
+	debugger := super openOn: newDebugSession withFullView: aBool andNotification: aString.
+	newDebugSession stopKeepingAlive: debugger. "To undo the #keepAlive: done by GTMoldableDebugger>>#openOn:WithFullView:andNotification:"
+	debugger originalSession: aDebugSession.
+	aDebugSession keepAlive: debugger.
 ]
 
 { #category : #'debugger declaration' }

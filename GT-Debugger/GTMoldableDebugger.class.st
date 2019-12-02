@@ -10,6 +10,9 @@ Class {
 	#superclass : #GLMCompositePresentation,
 	#traits : 'GTBrowsingActions',
 	#classTraits : 'GTBrowsingActions classTrait',
+	#instVars : [
+		'originalSession'
+	],
 	#classVars : [
 		'EnableDebuggerWindowDistinctColor',
 		'EnableStackColoring'
@@ -97,10 +100,14 @@ GTMoldableDebugger class >> openOn: aDebugSession withFullView: aBool andNotific
 				"Use a custom extension"
 				aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
 	
+	debugger := self on: aDebugSession "(self spanNewSessionFrom: aDebugSession)".
+	debugger originalSession: aDebugSession.
+	
 	aDebugSession keepAlive: debugger.
 	aBool | aString isNil "In case the string is nil it means we should show the full debugger and not a notification"
 		ifTrue: [ debugger openWithFullView ]
-		ifFalse: [ debugger openWithNotification: aString]
+		ifFalse: [ debugger openWithNotification: aString].
+	^ debugger
 ]
 
 { #category : #'window color api' }
@@ -150,7 +157,8 @@ GTMoldableDebugger class >> taskbarIconName [
 GTMoldableDebugger >> actOnBrowserClosing: ann [
 	"Terminating debug sessions is now handled by DebugSessionStorage, to allow other debuggers to re-open the debug session debugged by a GTDebugger after the latter has been closed"
 	"self session ifNotNil: [ :aSession | aSession terminate ]"
-	self session ifNotNil: [ :aSession | aSession stopKeepingAlive: self ]
+"	self session ifNotNil: [ :aSession | aSession stopKeepingAlive: self ]"
+	self originalSession ifNotNil: [ :aSession | aSession stopKeepingAlive: self ]
 ]
 
 { #category : #callbacks }
@@ -316,6 +324,16 @@ GTMoldableDebugger >> openOn: anObject [
 		extent: self initialExtent;
 		title: self session name;
 		yourself
+]
+
+{ #category : #callbacks }
+GTMoldableDebugger >> originalSession [
+	^ originalSession
+]
+
+{ #category : #actions }
+GTMoldableDebugger >> originalSession: aDebugSession [
+	originalSession := aDebugSession
 ]
 
 { #category : #building }
