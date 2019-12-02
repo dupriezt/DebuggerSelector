@@ -90,15 +90,15 @@ GTMoldableDebugger class >> openOn: aDebugSession withFullView: aBool [
 GTMoldableDebugger class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
 	
 	| debugger |	
-	debugger := (Smalltalk tools 
+	"debugger := (Smalltalk tools 
 		debuggerDispatcherFor: aDebugSession interruptedContext
 		matching: [:aDebugger | aDebugger availableAutomatically ]) 
 			ifNil: [ 
-				"Use the current debugger"
+				""Use the current debugger""
 				self on: aDebugSession ]
 			ifNotNil: [ :aDebugger | 
-				"Use a custom extension"
-				aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
+				""Use a custom extension""
+				aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ]."
 	
 	debugger := self on: aDebugSession "(self spanNewSessionFrom: aDebugSession)".
 	debugger originalSession: aDebugSession.
