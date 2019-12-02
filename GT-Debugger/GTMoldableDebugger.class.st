@@ -123,6 +123,13 @@ GTMoldableDebugger class >> sessionClass [
 	self subclassResponsibility
 ]
 
+{ #category : #'opening api' }
+GTMoldableDebugger class >> signalCannotOpenDebugSessionException [
+	"For use by TKTDebugger, a debugger from newTools, when DebuggerSelector is in the image.
+	The exception signalling is done here because TKTDebugger cannot have a reference to this exception class since it only exist with DebuggerSelector, while TKTDebugger can exist without DebuggerSelector"
+	DebugSessionCannotBeOpenedByThisDebugger signal
+]
+
 { #category : #private }
 GTMoldableDebugger class >> spanNewSessionForContext: aContext fromProcess: aProcess [
 
